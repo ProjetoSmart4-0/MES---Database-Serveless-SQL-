@@ -1,0 +1,1 @@
+#Dependencias Python (psycopg2, fastapi...)

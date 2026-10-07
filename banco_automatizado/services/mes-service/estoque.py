@@ -1,0 +1,1 @@
+#Lógica do négocio (função de baixa/entrada no estoque )
