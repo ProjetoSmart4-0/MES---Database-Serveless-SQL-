@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART 4.0 | MES</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div><strong>SMART<span>4.0</span></strong><small>MANUFACTURING SYSTEM</small></div>
+      </div>
+      <div class="side-label">WORKSPACE</div>
+      <nav>
+        <button class="nav-item active" data-page="overview"><span class="nav-icon">▦</span> Visão geral</button>
+        <button class="nav-item" data-page="inventory"><span class="nav-icon">▤</span> Estoque <span class="nav-count" id="navStockCount">03</span></button>
+        <button class="nav-item" data-page="orders"><span class="nav-icon">▣</span> Ordens de produção <em>breve</em></button>
+        <button class="nav-item" data-page="oee"><span class="nav-icon">◫</span> Indicadores OEE <em>breve</em></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="connection-card">
+          <div class="connection-head"><span class="pulse" id="connectionPulse"></span> CONEXÃO API</div>
+          <strong id="connectionLabel">Não conectada</strong>
+          <small id="connectionDetail">Configure o endereço do backend</small>
+        </div>
+        <div class="user-mini"><div class="avatar">G3</div><div><strong>Grupo 3</strong><small>MES • Database</small></div></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumb">SMART 4.0 <span>/</span> <strong id="crumb">Visão geral</strong></div>
+        <div class="top-actions"><span class="system-time" id="clock">--:--:--</span><span class="status-chip"><i></i> AMBIENTE DE DESENVOLVIMENTO</span></div>
+      </header>
+
+      <section class="page active" id="page-overview">
+        <div class="page-heading">
+          <div><div class="eyebrow">MANUFACTURING EXECUTION SYSTEM / 01</div><h1>Painel de <span>produção</span></h1><p>Acompanhe os recursos e a operação da planta SMART 4.0.</p></div>
+          <button class="primary-btn" id="refreshOverview">↻ Atualizar dados</button>
+        </div>
+        <div class="metric-grid">
+          <article class="metric-card"><div class="metric-top"><span>ITENS CADASTRADOS</span><b class="metric-symbol cyan">▤</b></div><strong id="metricItems">—</strong><small>Registros no estoque</small><div class="metric-line"><span style="width:72%"></span></div></article>
+          <article class="metric-card"><div class="metric-top"><span>UNIDADES EM ESTOQUE</span><b class="metric-symbol violet">◈</b></div><strong id="metricUnits">—</strong><small>Soma das quantidades</small><div class="metric-line violet-line"><span style="width:56%"></span></div></article>
+          <article class="metric-card"><div class="metric-top"><span>ALERTAS DE REPOSIÇÃO</span><b class="metric-symbol orange">⚑</b></div><strong id="metricAlerts">—</strong><small>Itens no nível mínimo ou abaixo</small><div class="metric-line orange-line"><span style="width:24%"></span></div></article>
+          <article class="metric-card muted-card"><div class="metric-top"><span>OEE GERAL</span><b class="metric-symbol green">◌</b></div><strong>—<sup>%</sup></strong><small>Aguardando integração de telemetria</small><div class="coming-tag">EM DESENVOLVIMENTO</div></article>
+        </div>
+        <div class="content-grid">
+          <section class="panel inventory-panel">
+            <div class="panel-heading"><div><div class="eyebrow">MATERIAIS / LIVE DATA</div><h2>Resumo do estoque</h2></div><button class="text-btn" data-goto="inventory">Ver estoque completo ↗</button></div>
+            <div class="table-wrap"><table><thead><tr><th>ITEM</th><th>CATEGORIA</th><th>QUANTIDADE</th><th>STATUS</th></tr></thead><tbody id="overviewInventory"><tr><td colspan="4" class="empty">Carregando dados do estoque…</td></tr></tbody></table></div>
+          </section>
+          <section class="panel system-panel">
+            <div class="panel-heading"><div><div class="eyebrow">SISTEMA / STATUS</div><h2>Integrações</h2></div><span class="live-dot">● LIVE</span></div>
+            <div class="integration"><div class="integration-icon">DB</div><div><strong>Neon PostgreSQL</strong><small>Banco de dados</small></div><span class="integration-state" id="dbState">Aguardando</span></div>
+            <div class="integration"><div class="integration-icon">API</div><div><strong>FastAPI</strong><small>Serviço MES</small></div><span class="integration-state" id="apiState">Aguardando</span></div>
+            <div class="integration"><div class="integration-icon">UI</div><div><strong>Interface Web</strong><small>SMART 4.0</small></div><span class="integration-state ok">Ativa</span></div>
+            <div class="note-box"><span>ⓘ</span><p>Os dados de estoque vêm da API. Ordens de produção e OEE serão habilitados após a implementação desses módulos.</p></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="page" id="page-inventory">
+        <div class="page-heading"><div><div class="eyebrow">GESTÃO DE MATERIAIS / 02</div><h1>Controle de <span>estoque</span></h1><p>Consulte os materiais e registre a baixa de insumos.</p></div><button class="primary-btn" id="refreshInventory">↻ Sincronizar estoque</button></div>
+        <div class="inventory-toolbar"><div class="search-box">⌕ <input id="searchInventory" placeholder="Buscar item..." aria-label="Buscar item"></div><span class="data-source"><i></i> Fonte: API MES</span></div>
+        <section class="panel full-panel"><div class="panel-heading"><div><div class="eyebrow">INVENTORY STOCK</div><h2>Materiais cadastrados</h2></div><span class="record-count" id="recordCount">0 REGISTROS</span></div>
+          <div class="table-wrap"><table><thead><tr><th>ID</th><th>ITEM</th><th>CATEGORIA</th><th>QUANTIDADE</th><th>PONTO DE REPOSIÇÃO</th><th>ATUALIZADO EM</th><th>STATUS</th></tr></thead><tbody id="inventoryRows"><tr><td colspan="7" class="empty">Carregando…</td></tr></tbody></table></div>
+          <div class="table-footer"><span id="tableMessage">Aguardando conexão com a API.</span><span>SMART 4.0 <b>•</b> MES</span></div>
+        </section>
+        <section class="panel debit-panel"><div class="panel-heading"><div><div class="eyebrow">MOVIMENTAÇÃO / OUT</div><h2>Registrar baixa de material</h2></div><span class="action-tag">POST REQUEST</span></div>
+          <form id="debitForm" class="debit-form"><label>Item<select id="debitItem" required><option value="">Selecione um item</option></select></label><label>Quantidade<input id="debitQuantity" type="number" min="1" step="1" value="1" required></label><button class="primary-btn" type="submit">Confirmar baixa →</button></form>
+          <p class="form-hint">A operação chama <code>POST /api/v1/mes/inventory/debit</code>. Faça testes com cuidado: a baixa altera o estoque real do banco.</p>
+          <div id="debitFeedback" class="feedback" role="status"></div>
+        </section>
+      </section>
+
+      <section class="page placeholder-page" id="page-orders"><div class="placeholder-orb">▣</div><div class="eyebrow">MÓDULO / 03</div><h1>Ordens de <span>produção</span></h1><p>Esta área será conectada quando as rotas de criação, consulta e atualização das OPs estiverem prontas no FastAPI.</p><div class="coming-tag">MÓDULO EM DESENVOLVIMENTO</div></section>
+      <section class="page placeholder-page" id="page-oee"><div class="placeholder-orb">◫</div><div class="eyebrow">INDICADORES / 04</div><h1>Monitoramento <span>OEE</span></h1><p>Os indicadores de disponibilidade, desempenho e qualidade aparecerão aqui após a integração com telemetria e inspeção.</p><div class="coming-tag">AGUARDANDO DADOS</div></section>
+
+      <footer class="footer"><span>SMART 4.0 • MANUFACTURING EXECUTION SYSTEM</span><span>GRUPO 3 <b>·</b> DATABASE & MES</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
