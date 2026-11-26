@@ -1,103 +1,21 @@
+"""Capacidade fixa de materiais instalada na máquina SMART 4.0.
 
-from psycopg2.extras import RealDictCursor
-from .db_connection import get_db_connection
+Esses números representam a capacidade física disponível e NÃO são saldo
+contábil. Por isso, nunca são debitados ou alterados pelo MES.
+"""
+
+ESTOQUE_FIXO = [
+    {"id": 1, "item_name": "Base", "category": "COMPONENTE", "color": "PRETA", "current_quantity": 6, "min_quantity": 0, "unit": "unidades"},
+    {"id": 2, "item_name": "Base", "category": "COMPONENTE", "color": "VERMELHA", "current_quantity": 6, "min_quantity": 0, "unit": "unidades"},
+    {"id": 3, "item_name": "Tampa", "category": "COMPONENTE", "color": "PRETA", "current_quantity": 6, "min_quantity": 0, "unit": "unidades"},
+    {"id": 4, "item_name": "Tampa", "category": "COMPONENTE", "color": "VERMELHA", "current_quantity": 6, "min_quantity": 0, "unit": "unidades"},
+    *[
+        {"id": i + 5, "item_name": "Plaquinha lateral", "category": "COMPONENTE", "color": color, "current_quantity": 10, "min_quantity": 0, "unit": "unidades"}
+        for i, color in enumerate(("VERMELHA", "PRETA", "BRANCA", "AMARELA", "VERDE", "AZUL"))
+    ],
+]
 
 
-# Consultar todos os itens do estoque
 def listar_estoque():
-    conn = get_db_connection()
-
-    try:
-        cur = conn.cursor(cursor_factory=RealDictCursor)
-
-        cur.execute("""
-            SELECT
-                id,
-                item_name,
-                category,
-                current_quantity,
-                min_quantity,
-                unit
-            FROM inventory_stock
-            ORDER BY id;
-        """)
-
-        return [dict(item) for item in cur.fetchall()]
-
-    finally:
-        cur.close()
-        conn.close()
-
-
-# Debitar uma quantidade de um item do estoque
-def debitar_materia_prima(item_name: str, quantidade: int = 1):
-    if quantidade <= 0:
-        raise ValueError("A quantidade deve ser maior que zero.")
-
-    conn = get_db_connection()
-
-    try:
-        cur = conn.cursor(cursor_factory=RealDictCursor)
-
-        cur.execute("""
-            UPDATE inventory_stock
-            SET current_quantity = current_quantity - %s
-            WHERE item_name = %s
-              AND current_quantity >= %s
-            RETURNING id, item_name, current_quantity, unit;
-        """, (quantidade, item_name, quantidade))
-
-        item = cur.fetchone()
-
-        if not item:
-            conn.rollback()
-            return None
-
-        conn.commit()
-        return dict(item)
-
-    except Exception:
-        conn.rollback()
-        raise
-
-    finally:
-        cur.close()
-        conn.close()
-
-
-# Creditar uma quantidade de um item no estoque
-def creditar_produto_acabado(
-    item_name: str = "Caixa de Expedição",
-    quantidade: int = 1
-):
-    if quantidade <= 0:
-        raise ValueError("A quantidade deve ser maior que zero.")
-
-    conn = get_db_connection()
-
-    try:
-        cur = conn.cursor(cursor_factory=RealDictCursor)
-
-        cur.execute("""
-            UPDATE inventory_stock
-            SET current_quantity = current_quantity + %s
-            WHERE item_name = %s
-            RETURNING id, item_name, current_quantity, unit;
-        """, (quantidade, item_name))
-
-        item = cur.fetchone()
-
-        if not item:
-            conn.rollback()
-            return None
-
-        conn.commit()
-        return dict(item)
-
-    except Exception:
-        conn.rollback()
-        raise
-
-    finally:
-        cur.close()
-        conn.close()
+    """Retorna uma cópia do estoque/capacidade fixa configurada na máquina."""
+    return [item.copy() for item in ESTOQUE_FIXO]

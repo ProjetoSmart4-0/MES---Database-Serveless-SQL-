@@ -1,11 +1,30 @@
+
 import os
+from pathlib import Path
+
 import psycopg2
+from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
 
-# A URL do Neon Postgres deve ser configurada no arquivo .env
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://neondb_owner:npg_ya6PT8pOwVdR@ep-small-math-b63iws54-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+# Localiza o .env na raiz do projeto
+BASE_DIR = Path(__file__).resolve().parent.parent
+ENV_PATH = BASE_DIR / ".env"
+
+load_dotenv(dotenv_path=ENV_PATH)
+
 
 def get_db_connection():
-    """Abre uma conexão segura com o Neon Postgres."""
-    conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
-    return conn
+    """Abre uma conexão com o Neon PostgreSQL."""
+    database_url = os.getenv("DATABASE_URL")
+
+    if not database_url:
+        raise RuntimeError(
+            "DATABASE_URL não configurada. "
+            "Verifique o arquivo .env na raiz do projeto."
+        )
+
+    return psycopg2.connect(
+        database_url,
+        cursor_factory=RealDictCursor,
+        connect_timeout=10
+    )

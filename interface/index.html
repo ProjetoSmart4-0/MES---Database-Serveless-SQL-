@@ -20,7 +20,7 @@
       <nav>
         <button class="nav-item active" data-page="overview"><span class="nav-icon">▦</span> Visão geral</button>
         <button class="nav-item" data-page="inventory"><span class="nav-icon">▤</span> Estoque <span class="nav-count" id="navStockCount">03</span></button>
-        <button class="nav-item" data-page="orders"><span class="nav-icon">▣</span> Ordens de produção <em>breve</em></button>
+        <button class="nav-item" data-page="orders"><span class="nav-icon">▣</span> Ordens de produção</button>
         <button class="nav-item" data-page="oee"><span class="nav-icon">◫</span> Indicadores OEE <em>breve</em></button>
       </nav>
       <div class="sidebar-bottom">
@@ -47,39 +47,49 @@
         <div class="metric-grid">
           <article class="metric-card"><div class="metric-top"><span>ITENS CADASTRADOS</span><b class="metric-symbol cyan">▤</b></div><strong id="metricItems">—</strong><small>Registros no estoque</small><div class="metric-line"><span style="width:72%"></span></div></article>
           <article class="metric-card"><div class="metric-top"><span>UNIDADES EM ESTOQUE</span><b class="metric-symbol violet">◈</b></div><strong id="metricUnits">—</strong><small>Soma das quantidades</small><div class="metric-line violet-line"><span style="width:56%"></span></div></article>
-          <article class="metric-card"><div class="metric-top"><span>ALERTAS DE REPOSIÇÃO</span><b class="metric-symbol orange">⚑</b></div><strong id="metricAlerts">—</strong><small>Itens no nível mínimo ou abaixo</small><div class="metric-line orange-line"><span style="width:24%"></span></div></article>
+          <article class="metric-card"><div class="metric-top"><span>CORES DISPONÍVEIS</span><b class="metric-symbol orange">⚑</b></div><strong id="metricAlerts">—</strong><small>Capacidade fixa da máquina</small><div class="metric-line orange-line"><span style="width:24%"></span></div></article>
           <article class="metric-card muted-card"><div class="metric-top"><span>OEE GERAL</span><b class="metric-symbol green">◌</b></div><strong>—<sup>%</sup></strong><small>Aguardando integração de telemetria</small><div class="coming-tag">EM DESENVOLVIMENTO</div></article>
         </div>
         <div class="content-grid">
           <section class="panel inventory-panel">
             <div class="panel-heading"><div><div class="eyebrow">MATERIAIS / LIVE DATA</div><h2>Resumo do estoque</h2></div><button class="text-btn" data-goto="inventory">Ver estoque completo ↗</button></div>
-            <div class="table-wrap"><table><thead><tr><th>ITEM</th><th>CATEGORIA</th><th>QUANTIDADE</th><th>STATUS</th></tr></thead><tbody id="overviewInventory"><tr><td colspan="4" class="empty">Carregando dados do estoque…</td></tr></tbody></table></div>
+            <div class="table-wrap"><table><thead><tr><th>COMPONENTE</th><th>COR</th><th>CAPACIDADE</th><th>TIPO</th></tr></thead><tbody id="overviewInventory"><tr><td colspan="4" class="empty">Carregando dados do estoque…</td></tr></tbody></table></div>
           </section>
           <section class="panel system-panel">
             <div class="panel-heading"><div><div class="eyebrow">SISTEMA / STATUS</div><h2>Integrações</h2></div><span class="live-dot">● LIVE</span></div>
             <div class="integration"><div class="integration-icon">DB</div><div><strong>Neon PostgreSQL</strong><small>Banco de dados</small></div><span class="integration-state" id="dbState">Aguardando</span></div>
             <div class="integration"><div class="integration-icon">API</div><div><strong>FastAPI</strong><small>Serviço MES</small></div><span class="integration-state" id="apiState">Aguardando</span></div>
             <div class="integration"><div class="integration-icon">UI</div><div><strong>Interface Web</strong><small>SMART 4.0</small></div><span class="integration-state ok">Ativa</span></div>
-            <div class="note-box"><span>ⓘ</span><p>Os dados de estoque vêm da API. Ordens de produção e OEE serão habilitados após a implementação desses módulos.</p></div>
+            <div class="note-box"><span>ⓘ</span><p>Estoque e ordens de produção integrados à API. OEE aguarda a integração da telemetria.</p></div>
           </section>
         </div>
       </section>
 
       <section class="page" id="page-inventory">
-        <div class="page-heading"><div><div class="eyebrow">GESTÃO DE MATERIAIS / 02</div><h1>Controle de <span>estoque</span></h1><p>Consulte os materiais e registre a baixa de insumos.</p></div><button class="primary-btn" id="refreshInventory">↻ Sincronizar estoque</button></div>
+        <div class="page-heading"><div><div class="eyebrow">GESTÃO DE MATERIAIS / 02</div><h1>Controle de <span>estoque</span></h1><p>Capacidade física fixa instalada na máquina. Os números não são alterados pelo MES.</p></div><button class="primary-btn" id="refreshInventory">↻ Sincronizar estoque</button></div>
         <div class="inventory-toolbar"><div class="search-box">⌕ <input id="searchInventory" placeholder="Buscar item..." aria-label="Buscar item"></div><span class="data-source"><i></i> Fonte: API MES</span></div>
         <section class="panel full-panel"><div class="panel-heading"><div><div class="eyebrow">INVENTORY STOCK</div><h2>Materiais cadastrados</h2></div><span class="record-count" id="recordCount">0 REGISTROS</span></div>
-          <div class="table-wrap"><table><thead><tr><th>ID</th><th>ITEM</th><th>CATEGORIA</th><th>QUANTIDADE</th><th>PONTO DE REPOSIÇÃO</th><th>ATUALIZADO EM</th><th>STATUS</th></tr></thead><tbody id="inventoryRows"><tr><td colspan="7" class="empty">Carregando…</td></tr></tbody></table></div>
-          <div class="table-footer"><span id="tableMessage">Aguardando conexão com a API.</span><span>SMART 4.0 <b>•</b> MES</span></div>
+          <div class="table-wrap"><table><thead><tr><th>COMPONENTE</th><th>COR</th><th>CAPACIDADE FIXA</th><th>TIPO</th></tr></thead><tbody id="inventoryRows"><tr><td colspan="4" class="empty">Carregando…</td></tr></tbody></table></div>
+          <div class="table-footer"><span id="tableMessage">Aguardando conexão com a API.</span><span>CAPACIDADE FIXA • SEM BAIXA AUTOMÁTICA</span></div>
         </section>
-        <section class="panel debit-panel"><div class="panel-heading"><div><div class="eyebrow">MOVIMENTAÇÃO / OUT</div><h2>Registrar baixa de material</h2></div><span class="action-tag">POST REQUEST</span></div>
-          <form id="debitForm" class="debit-form"><label>Item<select id="debitItem" required><option value="">Selecione um item</option></select></label><label>Quantidade<input id="debitQuantity" type="number" min="1" step="1" value="1" required></label><button class="primary-btn" type="submit">Confirmar baixa →</button></form>
-          <p class="form-hint">A operação chama <code>POST /api/v1/mes/inventory/debit</code>. Faça testes com cuidado: a baixa altera o estoque real do banco.</p>
-          <div id="debitFeedback" class="feedback" role="status"></div>
+        <section class="panel debit-panel"><div class="panel-heading"><div><div class="eyebrow">CONFIGURAÇÃO DA MÁQUINA</div><h2>Estoque de referência</h2></div><span class="action-tag">FIXO</span></div>
+          <p class="form-hint">O MES consulta estes limites para validar cada pedido. Registrar produção, inspeção ou expedição não altera essas quantidades.</p>
         </section>
       </section>
+      </section>
 
-      <section class="page placeholder-page" id="page-orders"><div class="placeholder-orb">▣</div><div class="eyebrow">MÓDULO / 03</div><h1>Ordens de <span>produção</span></h1><p>Esta área será conectada quando as rotas de criação, consulta e atualização das OPs estiverem prontas no FastAPI.</p><div class="coming-tag">MÓDULO EM DESENVOLVIMENTO</div></section>
+      <section class="page" id="page-orders">
+        <div class="page-heading"><div><div class="eyebrow">PLANEJAMENTO E EXECUÇÃO / 03</div><h1>Ordens de <span>produção</span></h1><p>Cadastre um bloco personalizado e acompanhe cada caixinha no processamento.</p></div><button class="primary-btn" id="refreshOrders">↻ Atualizar ordens</button></div>
+        <section class="panel order-create-panel"><div class="panel-heading"><div><div class="eyebrow">NOVO PEDIDO / OP AUTOMÁTICA</div><h2>Personalizar bloco</h2></div><span class="action-tag">1 PEDIDO = 1 BLOCO</span></div>
+          <form id="orderForm" class="order-form order-form-custom"><label>Tipo de bloco<select id="blockType" required><option value="UNICO">Bloco único — 1 caixinha</option><option value="DUPLO">Bloco duplo — 2 caixinhas</option><option value="TRIPLO">Bloco triplo — 3 caixinhas</option></select></label><label>Cor da base e da tampa<select id="baseColor" required><option value="PRETA">Preta</option><option value="VERMELHA">Vermelha</option></select></label><div class="box-customizations" id="boxCustomizations"></div><button class="primary-btn" type="submit">Enviar pedido e gerar OP →</button></form><div id="orderFeedback" class="feedback" role="status"></div>
+        </section>
+        <section class="panel full-panel"><div class="panel-heading"><div><div class="eyebrow">PRODUCTION ORDERS / LIVE DATA</div><h2>Ordens cadastradas</h2></div><span class="record-count" id="ordersCount">0 ORDENS</span></div>
+          <div class="table-wrap"><table><thead><tr><th>NÚMERO DA OP</th><th>BLOCO</th><th>BASE / TAMPA</th><th>CAIXINHAS</th><th>PRODUZIDAS</th><th>DEFEITUOSAS</th><th>STATUS</th><th>CRIADA EM</th></tr></thead><tbody id="ordersRows"><tr><td colspan="8" class="empty">Carregando ordens…</td></tr></tbody></table></div>
+        </section>
+        <section class="panel process-panel"><div class="panel-heading"><div><div class="eyebrow">RASTREAMENTO / PROCESS</div><h2>Registrar processamento de peça</h2></div><span class="action-tag">POST REQUEST</span></div>
+          <form id="pieceForm" class="order-form"><label>ID da ordem<input id="pieceOrderId" type="number" min="1" step="1" placeholder="ID exibido no retorno da API" required></label><label>QR Code da peça<input id="pieceQrCode" maxlength="200" placeholder="Ex.: QR-PECA-001" required></label><button class="primary-btn" type="submit">Processar peça →</button></form><p class="form-hint">Cada QR Code é associado automaticamente à próxima caixinha configurada na OP. O processamento atualiza a rastreabilidade e o andamento, sem alterar o estoque fixo da máquina.</p><div id="pieceFeedback" class="feedback" role="status"></div>
+        </section>
+      </section>
       <section class="page placeholder-page" id="page-oee"><div class="placeholder-orb">◫</div><div class="eyebrow">INDICADORES / 04</div><h1>Monitoramento <span>OEE</span></h1><p>Os indicadores de disponibilidade, desempenho e qualidade aparecerão aqui após a integração com telemetria e inspeção.</p><div class="coming-tag">AGUARDANDO DADOS</div></section>
 
       <footer class="footer"><span>SMART 4.0 • MANUFACTURING EXECUTION SYSTEM</span><span>GRUPO 3 <b>·</b> DATABASE & MES</span></footer>

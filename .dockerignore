@@ -1,0 +1,6 @@
+**
+!Dockerfile
+!requirements.txt
+!estoque/
+estoque/**
+!estoque/*.py
